@@ -40,8 +40,7 @@ defmodule ExGrok.Connection do
 
   @doc false
   def init(_) do
-    # port = Port.open({:spawn, "/Users/pdawczak/ngrok/ngrok http -log stdout -log-level debug -log-format json 4000"}, [:binary])
-    port = Port.open({:spawn, "/Users/pdawczak/ngrok/ngrok http -log stdout -log-level debug -log-format logfmt 4000"}, [:binary])
+    port = open_port(Application.get_env(:ex_grok, :ngrok))
 
     send(self(), :port_health_check)
 
@@ -120,6 +119,20 @@ defmodule ExGrok.Connection do
 
   defp new(port) do
     %__MODULE__{port: port}
+  end
+
+  defp open_port(opts) do
+    Port.open(
+      {:spawn, prepare_command(opts)},
+      [:binary]
+    )
+  end
+
+  defp prepare_command(opts) do
+    exec = Keyword.get(opts, :executable, "ngrok")
+    port = Keyword.get(opts, :port, "4000")
+
+    "#{exec} http -log stdout -log-level debug -log-format logfmt #{port}"
   end
 
   defp extract_connection_info(%{"lvl" => "eror", "err" => reason}) do
