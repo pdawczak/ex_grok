@@ -7,7 +7,10 @@ defmodule ExGrok.Mixfile do
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps()]
+     deps: deps(),
+     name: "ExGrok",
+     source_url: "https://github.com/pdawczak/ex_grok",
+     homepage_url: "https://github.com/pdawczak/ex_grok"]
   end
 
   def application do
@@ -16,6 +19,6 @@ defmodule ExGrok.Mixfile do
   end
 
   defp deps do
-    []
+    [{:ex_doc, "~> 0.14", only: :dev}]
   end
 end
