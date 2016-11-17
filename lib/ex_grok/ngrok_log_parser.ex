@@ -44,7 +44,7 @@ defmodule ExGrok.NgrokLogParser do
   defp do_parse_key(data_to_parse, key_acc, parsed)
   
   defp do_parse_key([], [], parsed), do: {:ok, parsed}
-  # If no `=` encountered when parsing - no matching value
+  # If no `=` encountered when parsing the key - :error, no matching value
   defp do_parse_key([], _k, _parsed), do: :error
   defp do_parse_key([?= | rest], k, parsed) do
     do_start_parse_value(rest, k, parsed)
