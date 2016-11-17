@@ -19,6 +19,7 @@ defmodule ExGrok.Mixfile do
   end
 
   defp deps do
-    [{:ex_doc, "~> 0.14", only: :dev}]
+    [{:ex_doc, "~> 0.14", only: :dev},
+     {:dialyxir, "~> 0.3.5", only: :dev}]
   end
 end
