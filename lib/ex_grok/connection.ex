@@ -47,27 +47,12 @@ defmodule ExGrok.Connection do
     {:ok, new(port)}
   end
 
-  # It delegates obtaining connection information to be handled by one of `handle_info`.
+  # It delegates replying with connection information to one of the following
+  # `handle_info` callbacks.
   @doc false
   def handle_call(:status, from, connection) do
     send(self(), {:connected, from})
     {:noreply, connection}
-  end
-
-  # Performs periodic check on port opened.
-  # 
-  # In will schedule next health_check if port is alive, otherwise it will stop
-  # the gen_server.
-  @doc false
-  def handle_info(:port_health_check, %{port: port} = connection) do
-    case Port.info(port) do
-      nil ->
-        {:stop, "ngrok port doesn't respond", connection}
-
-      _ ->
-        Process.send_after(self(), :port_health_check, 3_000)
-        {:noreply, connection}
-    end
   end
 
   # If the connection has been established - replies with connection information.
@@ -98,9 +83,9 @@ defmodule ExGrok.Connection do
     {:noreply, connection}
   end
 
-  # It stops gen_server in case of connection failure.
+  # It stops gen_server in case of connection failure detected.
   @doc false
-  def handle_info({:failed_to_start, reason}, connection) do
+  def handle_info({:failed_to_connect, reason}, connection) do
     {:stop, reason, connection}
   end
 
@@ -112,6 +97,22 @@ defmodule ExGrok.Connection do
   @doc false
   def handle_info({:set_config, "https:" <> _rest = url}, connection) do
     {:noreply, Map.put(connection, :https_url, url)}
+  end
+
+  # Performs periodic check on port opened.
+  #
+  # It schedules next health_check in 3 secs if port is alive, otherwise it
+  # stops the gen_server.
+  @doc false
+  def handle_info(:port_health_check, %{port: port} = connection) do
+    case Port.info(port) do
+      nil ->
+        {:stop, "ngrok port doesn't respond", connection}
+
+      _ ->
+        Process.send_after(self(), :port_health_check, 3_000)
+        {:noreply, connection}
+    end
   end
 
   ###
@@ -136,7 +137,7 @@ defmodule ExGrok.Connection do
   end
 
   defp extract_connection_info(%{"lvl" => "eror", "err" => reason}) do
-    send(self(), {:failed_to_start, reason})
+    send(self(), {:failed_to_connect, reason})
   end
 
   @log_url_data_pattern  ~r{([\w\s]+URL:)(?<url>[\w\:\/\.]+)}
@@ -151,7 +152,7 @@ defmodule ExGrok.Connection do
   end
 
   defp set_config(%{"url" => url}) do
-    send(self, {:set_config, url})
+    send(self(), {:set_config, url})
   end
 
   defp set_config(_) do
