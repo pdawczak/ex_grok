@@ -136,13 +136,13 @@ defmodule ExGrok.Connection do
     "#{exec} http -log stdout -log-level debug -log-format logfmt #{port}"
   end
 
-  defp extract_connection_info(%{"lvl" => "eror", "err" => reason}) do
+  defp extract_connection_info({:ok, %{"lvl" => "eror", "err" => reason}}) do
     send(self(), {:failed_to_connect, reason})
   end
 
   @log_url_data_pattern  ~r{([\w\s]+URL:)(?<url>[\w\:\/\.]+)}
 
-  defp extract_connection_info(%{"lvl" =>"dbug", "resp" => body}) do
+  defp extract_connection_info({:ok, %{"lvl" =>"dbug", "resp" => body}}) do
     @log_url_data_pattern
     |> Regex.named_captures(body)
     |> set_config()

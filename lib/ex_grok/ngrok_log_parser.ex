@@ -7,6 +7,10 @@ defmodule ExGrok.NgrokLogParser do
   """
 
   @type parsed :: map
+  @type success :: {:ok, parsed}
+  @type error :: :error
+
+  @type result :: success | error
 
   @doc """
   It parses the string `str` provided.
@@ -14,14 +18,14 @@ defmodule ExGrok.NgrokLogParser do
   ## Examples
 
       iex> ExGrok.NgrokLogParser.parse("")
-      %{}
+      {:ok, %{}}
 
-      iex> log = ~s{t=2016-11-11T20:52:54+0000 lvl=info msg="A message"}
+      iex> log = ~s{t=2016-11-11T20:52:54+0000 msg="A message"}
       iex> ExGrok.NgrokLogParser.parse(log)
-      %{"t" => "2016-11-11T20:52:54+0000", "lvl" => "info", "msg" => "A message"}
+      {:ok, %{"t" => "2016-11-11T20:52:54+0000", "msg" => "A message"}}
 
   """
-  @spec parse(String.t) :: parsed
+  @spec parse(String.t) :: result
   def parse(str) do
     str
     |> String.to_char_list()
@@ -36,10 +40,12 @@ defmodule ExGrok.NgrokLogParser do
   #     it will delegate furhter parsing to `do_start_parse_value`
   #   * due to lack of more data to process, in which case it returns accumulated
   #     `parsed` map.
-  @spec do_parse_key(charlist, charlist, parsed) :: parsed
+  @spec do_parse_key(charlist, charlist, parsed) :: result
   defp do_parse_key(data_to_parse, key_acc, parsed)
   
-  defp do_parse_key([], _k, parsed), do: parsed
+  defp do_parse_key([], [], parsed), do: {:ok, parsed}
+  # If no `=` encountered when parsing - no matching value
+  defp do_parse_key([], _k, _parsed), do: :error
   defp do_parse_key([?= | rest], k, parsed) do
     do_start_parse_value(rest, k, parsed)
   end
@@ -52,7 +58,7 @@ defmodule ExGrok.NgrokLogParser do
   # It is meant to take parsing over from `do_parse_key` key. It's main purpose is
   # to detect if the data to be parsed is an embedded string (delimited by `"`),
   # or just single word like string.
-  @spec do_start_parse_value(charlist, charlist, parsed) :: parsed
+  @spec do_start_parse_value(charlist, charlist, parsed) :: result
   defp do_start_parse_value(data_to_parse, key_acc, parsed)
 
   defp do_start_parse_value([?" | rest], k, parsed) do
@@ -66,11 +72,11 @@ defmodule ExGrok.NgrokLogParser do
   #
   # Embedded strings are delimited by `"` which allows them to store white space,
   # thus it is important not to treat them as value delimiters.
-  @spec do_parse_embedded_string(charlist, charlist, charlist, parsed) :: parsed
+  @spec do_parse_embedded_string(charlist, charlist, charlist, parsed) :: result
   defp do_parse_embedded_string(data_to_parse, key_acc, val_acc, parsed)
 
-  defp do_parse_embedded_string([], k, v, parsed) do
-    put_in_parsed(k, v, parsed)
+  defp do_parse_embedded_string([], _k, _v, _parsed) do
+    :error
   end
   defp do_parse_embedded_string([?", ?\s | rest], k, v, parsed) do
     do_stop_parse_string_or_value(rest, k, v, parsed)
@@ -85,7 +91,7 @@ defmodule ExGrok.NgrokLogParser do
   # It performs parsing of one-word string.
   #
   # It treats whitespace as a delimiter of string parsed.
-  @spec do_parse_string(charlist, charlist, charlist, parsed) :: parsed
+  @spec do_parse_string(charlist, charlist, charlist, parsed) :: result
   defp do_parse_string(data_to_parse, key_acc, val_acc, parsed)
 
   defp do_parse_string([], k, v, parsed) do
@@ -99,7 +105,7 @@ defmodule ExGrok.NgrokLogParser do
   end
 
   # It is helper function that is used for repetitive task when parsing strings.
-  @spec do_stop_parse_string_or_value(charlist, charlist, charlist, parsed) :: parsed
+  @spec do_stop_parse_string_or_value(charlist, charlist, charlist, parsed) :: result
   defp do_stop_parse_string_or_value(rest, k, v, parsed) do
     new_parsed = put_in_parsed(parsed, k, v)
 
