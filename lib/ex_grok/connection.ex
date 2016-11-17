@@ -40,7 +40,7 @@ defmodule ExGrok.Connection do
 
   @doc false
   def init(_) do
-    port = open_port(Application.get_env(:ex_grok, :ngrok))
+    port = open_port(Application.get_env(:ex_grok, :command))
 
     send(self(), :port_health_check)
 
