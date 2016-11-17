@@ -31,7 +31,7 @@ defmodule ExGrok.Server do
 
     %{http_url: http_url, https_url: https_url} = connection
 
-    Logger.info("ngrok connection established - #{http_url}, #{https_url}")
+    _ = Logger.info("ngrok connection established - #{http_url}, #{https_url}")
 
     {:ok, connection}
   end
