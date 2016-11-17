@@ -78,7 +78,7 @@ defmodule ExGrok.Connection do
     |> String.trim()
     |> String.split("\n")
     |> Enum.map(&NgrokLogParser.parse/1)
-    |> Enum.map(&extract_connection_info/1)
+    |> Enum.each(&extract_connection_info/1)
 
     {:noreply, connection}
   end
