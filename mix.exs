@@ -10,7 +10,9 @@ defmodule ExGrok.Mixfile do
      deps: deps(),
      name: "ExGrok",
      source_url: "https://github.com/pdawczak/ex_grok",
-     homepage_url: "https://github.com/pdawczak/ex_grok"]
+     homepage_url: "https://github.com/pdawczak/ex_grok",
+     docs: [main: "README",
+            extras: ["README.md"]]]
   end
 
   def application do

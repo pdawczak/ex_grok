@@ -9,16 +9,20 @@ defmodule ExGrok.Connection do
 
   require Logger
 
-  alias ExGrok.NgrokLogParser
+  alias ExGrok.{Connection, NgrokLogParser}
 
   defstruct port: nil, http_url: nil, https_url: nil
+
+  @type t :: %__MODULE__{
+    port: port,
+    http_url: String.t,
+    https_url: String.t
+  }
 
   ######
   # Public API
 
-  @doc """
-  Starts connection server.
-  """
+  @doc false
   def start_link do
     GenServer.start_link(__MODULE__, [], name: :connection)
   end
@@ -31,6 +35,7 @@ defmodule ExGrok.Connection do
     * return `{:ok, connection_information}` if connected successfully
     * raise due to timeout trying to establish the connection
   """
+  @spec connect :: {:ok, Connection.t}
   def connect do
     GenServer.call(:connection, :status)
   end
@@ -118,10 +123,12 @@ defmodule ExGrok.Connection do
   ###
   # Private functions
 
+  @spec new(port) :: Connection.t
   defp new(port) do
     %__MODULE__{port: port}
   end
 
+  @spec open_port(keyword) :: port
   defp open_port(opts) do
     Port.open(
       {:spawn, prepare_command(opts)},
@@ -129,6 +136,7 @@ defmodule ExGrok.Connection do
     )
   end
 
+  @spec prepare_command(keyword) :: String.t
   defp prepare_command(opts) do
     exec = Keyword.get(opts, :executable, "ngrok")
     port = Keyword.get(opts, :port, "4000")
@@ -136,25 +144,28 @@ defmodule ExGrok.Connection do
     "#{exec} http -log stdout -log-level debug -log-format logfmt #{port}"
   end
 
+  @log_url_data_pattern  ~r{([\w\s]+URL:)(?<url>[\w\:\/\.]+)}
+
+  @spec extract_connection_info(NgrokLogParser.result) :: no_return
+  defp extract_connection_info(result)
+
   defp extract_connection_info({:ok, %{"lvl" => "eror", "err" => reason}}) do
     send(self(), {:failed_to_connect, reason})
   end
-
-  @log_url_data_pattern  ~r{([\w\s]+URL:)(?<url>[\w\:\/\.]+)}
-
   defp extract_connection_info({:ok, %{"lvl" =>"dbug", "resp" => body}}) do
     @log_url_data_pattern
     |> Regex.named_captures(body)
     |> set_config()
   end
-
   defp extract_connection_info(_) do
   end
+
+  @spec set_config(map) :: no_return
+  defp set_config(map)
 
   defp set_config(%{"url" => url}) do
     send(self(), {:set_config, url})
   end
-
   defp set_config(_) do
   end
 end

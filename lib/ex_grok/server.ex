@@ -1,14 +1,14 @@
 defmodule ExGrok.Server do
   use GenServer
 
+  alias ExGrok.Connection
+
   require Logger
 
   ######
   # Public API
 
-  @doc """
-  Starts ngrok server.
-  """
+  @doc false
   def start_link do
     GenServer.start_link(__MODULE__, [], name: :server)
   end
@@ -16,8 +16,9 @@ defmodule ExGrok.Server do
   @doc """
   Returns ngrok connection.
 
-  It contains information about http and https url opened.
+  It contains information about `http` and `https` urls opened.
   """
+  @spec connection :: Connection.t
   def connection do
     GenServer.call(:server, :connection)
   end
