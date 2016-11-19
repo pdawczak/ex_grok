@@ -1,4 +1,8 @@
 defmodule ExGrok.Server do
+  @moduledoc """
+  Holds `connection` information if the ngrok connection has been established
+  successfully.
+  """
   use GenServer
 
   alias ExGrok.Connection
@@ -15,8 +19,6 @@ defmodule ExGrok.Server do
 
   @doc """
   Returns ngrok connection.
-
-  It contains information about `http` and `https` urls opened.
   """
   @spec connection :: Connection.t
   def connection do

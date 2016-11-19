@@ -28,7 +28,7 @@ The package can be installed as:
 
 ## Configuration
 
-By default ExGrok will try to establish connection only in `dev` environment.
+By default `ex_grok` will try to establish connection only in `dev` environment.
 It is easy to change this behaviour by enabling it in `config/config.exs` file:
 
 ```elixir
@@ -44,13 +44,13 @@ that Phoenix uses in development), but it can be changed in `config/config.exs`:
 ```elixir
 config :ex_grok, :command,
   executable: "path/to/ngrok",
-  port: "4040"
+  port: "3040"
 ```
 
 ## Usage
 
-Once your application is up and running and ngrok connection has been
-established successfully, the ngrok urls will be reported:
+Once your application is up and running, and ngrok connection has been
+established successfully, the available urls will be reported in logs:
 
 ```
 20:48:28.447 [info]  ngrok connection established - http://12345678.ngrok.io, https://12345678.ngrok.io

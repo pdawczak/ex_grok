@@ -1,6 +1,6 @@
 defmodule ExGrok.NgrokLogParser do
-  @docmodule """
-  This module helps parsing ngrok logs that come from spawned port.
+  @moduledoc """
+  Helps parsing ngrok logs that come from spawned port.
 
   Those logs consit of established connection parameters, but also will notify
   if something went wrong.
@@ -13,7 +13,7 @@ defmodule ExGrok.NgrokLogParser do
   @type result :: success | error
 
   @doc """
-  It parses the string `str` provided.
+  Parses the string `str` provided.
 
   ## Examples
 

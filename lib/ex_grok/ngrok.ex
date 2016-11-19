@@ -1,6 +1,6 @@
 defmodule ExGrok.Ngrok do
-  @docmodule """
-  It manages ngrok connection.
+  @moduledoc """
+  Manages ngrok port.
 
   It spawns new ngrok executable and looks after it. In case ngrok stops
   responding it will try to spawn new one.
@@ -27,11 +27,11 @@ defmodule ExGrok.Ngrok do
   end
 
   @doc """
-  It returns connection information.
+  Returns connection information.
 
   It will either:
 
-    * return `{:ok, connection_information}` if connected successfully
+    * return `{:ok, connection}` if connected successfully
     * raise due to timeout trying to establish the connection
   """
   @spec connect :: {:ok, Connection.t}
@@ -79,7 +79,7 @@ defmodule ExGrok.Ngrok do
     |> String.trim()
     |> String.split("\n")
     |> Enum.map(&NgrokLogParser.parse/1)
-    |> Enum.each(&extract_connection_info/1)
+    |> Enum.each(&extract_info/1)
 
     {:noreply, state}
   end
