@@ -147,18 +147,18 @@ defmodule ExGrok.Ngrok do
 
   @log_url_data_pattern  ~r{([\w\s]+URL:)(?<url>[\w\:\/\.]+)}
 
-  @spec extract_connection_info(NgrokLogParser.result) :: no_return
-  defp extract_connection_info(result)
+  @spec extract_info(NgrokLogParser.result) :: no_return
+  defp extract_info(result)
 
-  defp extract_connection_info({:ok, %{"lvl" => "eror", "err" => reason}}) do
+  defp extract_info({:ok, %{"lvl" => "eror", "err" => reason}}) do
     send(self(), {:failed_to_connect, reason})
   end
-  defp extract_connection_info({:ok, %{"lvl" =>"dbug", "resp" => body}}) do
+  defp extract_info({:ok, %{"lvl" =>"dbug", "resp" => body}}) do
     @log_url_data_pattern
     |> Regex.named_captures(body)
     |> set_config()
   end
-  defp extract_connection_info(_) do
+  defp extract_info(_) do
   end
 
   @spec set_config(map) :: no_return
