@@ -3,20 +3,18 @@ defmodule ExGrok.Application do
   use Application
 
   def start(_type, _args) do
-    children = children(enabled?)
-
     opts = [strategy: :one_for_one, name: ExGrok.Supervisor]
-    Supervisor.start_link(children, opts)
+    Supervisor.start_link(children(), opts)
   end
 
-  defp children(true) do
+  defp children do
     import Supervisor.Spec, warn: false
 
-    [supervisor(ExGrok.MasterSupervisor, [])]
-  end
-
-  defp children(_) do
-    []
+    if enabled? do
+      [supervisor(ExGrok.MasterSupervisor, [])]
+    else
+      []
+    end
   end
 
   defp enabled? do
