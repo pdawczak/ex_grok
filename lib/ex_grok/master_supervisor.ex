@@ -8,7 +8,7 @@ defmodule ExGrok.MasterSupervisor do
 
   def init(_) do
     children = [
-      worker(ExGrok.Connection, []),
+      worker(ExGrok.Ngrok, []),
       worker(ExGrok.Server, [])
     ]
 

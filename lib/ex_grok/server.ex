@@ -28,7 +28,7 @@ defmodule ExGrok.Server do
 
   @doc false
   def init(_) do
-    {:ok, connection} = ExGrok.Connection.connect()
+    {:ok, connection} = ExGrok.Ngrok.connect()
 
     %{http_url: http_url, https_url: https_url} = connection
 
