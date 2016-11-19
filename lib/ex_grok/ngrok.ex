@@ -72,10 +72,6 @@ defmodule ExGrok.Ngrok do
     end
   end
 
-  # @doc false
-  # def handle_info({:connected, _from} = msg, state) do
-  # end
-
   # It handles the messages that arrive from `port`.
   @doc false
   def handle_info({port, {:data, data}}, %{port: port} = state) do
