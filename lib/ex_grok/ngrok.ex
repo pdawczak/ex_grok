@@ -139,7 +139,6 @@ defmodule ExGrok.Ngrok do
 
   @spec prepare_command(keyword) :: String.t
   defp prepare_command(opts) do
-    # TODO: Those defaults are covered elsewhere, can remove those
     exec = Keyword.get(opts, :executable, "ngrok")
     port = Keyword.get(opts, :port, "4000")
 
@@ -176,8 +175,7 @@ defmodule ExGrok.Ngrok do
     Application.get_env(
       :ex_grok,
       :command,
-      [executable: "ngrok",
-       port: "4000"]
+      []
     )
   end
 end
