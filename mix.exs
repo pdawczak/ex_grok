@@ -7,6 +7,8 @@ defmodule ExGrok.Mixfile do
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     descripiton: descripiton(),
+     package: package(),
      deps: deps(),
      name: "ExGrok",
      source_url: "https://github.com/pdawczak/ex_grok",
@@ -23,5 +25,18 @@ defmodule ExGrok.Mixfile do
   defp deps do
     [{:ex_doc, "~> 0.14", only: :dev},
      {:dialyxir, "~> 0.3.5", only: :dev}]
+  end
+
+  defp descripiton do
+    """
+    Low dependecies ngrok wrapper.
+    """
+  end
+
+  defp package do
+    [files: ["lib", "mix.exs", "README.md"],
+     mainteiners: ["Paweł Dawczak"],
+     licenses: ["MIT"],
+     links: [github: "https://github.com/pdawczak/ex_grok"]]
   end
 end
