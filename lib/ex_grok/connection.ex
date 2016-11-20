@@ -20,7 +20,7 @@ defmodule ExGrok.Connection do
 
   @doc """
   Determines by information stored in `connection` if the ngrok connection has
-  been successfully established.
+  been established successfully.
   """
   @spec established?(Connection.t) :: boolean
   def established?(%__MODULE__{http_url: http_url, https_url: https_url}) do
