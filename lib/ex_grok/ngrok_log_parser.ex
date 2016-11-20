@@ -42,7 +42,7 @@ defmodule ExGrok.NgrokLogParser do
   #     `parsed` map.
   @spec do_parse_key(charlist, charlist, parsed) :: result
   defp do_parse_key(data_to_parse, key_acc, parsed)
-  
+
   defp do_parse_key([], [], parsed), do: {:ok, parsed}
   # If no `=` encountered when parsing the key - :error, no matching value
   defp do_parse_key([], _k, _parsed), do: :error
@@ -75,9 +75,7 @@ defmodule ExGrok.NgrokLogParser do
   @spec do_parse_embedded_string(charlist, charlist, charlist, parsed) :: result
   defp do_parse_embedded_string(data_to_parse, key_acc, val_acc, parsed)
 
-  defp do_parse_embedded_string([], _k, _v, _parsed) do
-    :error
-  end
+  defp do_parse_embedded_string([], _k, _v, _parsed), do: :error
   defp do_parse_embedded_string([?", ?\s | rest], k, v, parsed) do
     do_stop_parse_string_or_value(rest, k, v, parsed)
   end
