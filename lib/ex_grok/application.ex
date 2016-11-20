@@ -18,7 +18,11 @@ defmodule ExGrok.Application do
   end
 
   defp enabled? do
-    Application.get_env(:ex_grok, :enabled, default_enabled(Mix.env))
+    Application.get_env(
+      :ex_grok,
+      :enabled,
+      default_enabled(Mix.env)
+    )
   end
 
   defp default_enabled(:dev), do: true
