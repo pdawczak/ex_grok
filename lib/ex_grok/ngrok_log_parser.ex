@@ -37,7 +37,7 @@ defmodule ExGrok.NgrokLogParser do
   # It terminates in two cases:
   #
   #   * by encountering `"="` which indicates key-value relation, in which case
-  #     it will delegate furhter parsing to `do_start_parse_value`
+  #     it will delegate further parsing to `do_start_parse_value`
   #   * due to lack of more data to process, in which case it returns accumulated
   #     `parsed` map.
   @spec do_parse_key(charlist, charlist, parsed) :: result
