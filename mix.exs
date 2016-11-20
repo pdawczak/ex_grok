@@ -29,7 +29,7 @@ defmodule ExGrok.Mixfile do
 
   defp descripiton do
     """
-    Low dependecies ngrok wrapper.
+    Low dependencies ngrok wrapper.
     """
   end
 
