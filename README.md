@@ -1,6 +1,6 @@
 # ExGrok
 
-Low dependecies ngrok wrapper.
+Low dependencies ngrok wrapper.
 
 Tiny wrapper that will take care about ngrok connection for your Phoenix web
 applications you're working on and want to share with broader audience without
