@@ -119,6 +119,11 @@ defmodule ExGrok.Ngrok do
     end
   end
 
+  @doc false
+  def handle_info(_msg, state) do
+    {:noreply, state}
+  end
+
   ###
   # Private functions
 
