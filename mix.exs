@@ -10,6 +10,7 @@ defmodule ExGrok.Mixfile do
      description: description(),
      package: package(),
      deps: deps(),
+     aliases: aliases(),
      name: "ExGrok",
      source_url: "https://github.com/pdawczak/ex_grok",
      homepage_url: "https://github.com/pdawczak/ex_grok",
@@ -39,5 +40,9 @@ defmodule ExGrok.Mixfile do
      maintainers: ["Paweł Dawczak"],
      licenses: ["MIT"],
      links: [github: "https://github.com/pdawczak/ex_grok"]]
+  end
+
+  defp aliases do
+    ["check": ["dialyzer", "credo --strict"]]
   end
 end
