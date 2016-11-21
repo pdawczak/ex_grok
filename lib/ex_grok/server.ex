@@ -5,7 +5,7 @@ defmodule ExGrok.Server do
   """
   use GenServer
 
-  alias ExGrok.Connection
+  alias ExGrok.{Connection, Ngrok}
 
   require Logger
 
@@ -30,17 +30,17 @@ defmodule ExGrok.Server do
 
   @doc false
   def init(_) do
-    {:ok, connection} = ExGrok.Ngrok.connect()
+    {:ok, conn} = Ngrok.connect()
 
-    %{http_url: http_url, https_url: https_url} = connection
+    %{http_url: http_url, https_url: https_url} = conn
 
     _ = Logger.info("ngrok connection established - #{http_url}, #{https_url}")
 
-    {:ok, connection}
+    {:ok, conn}
   end
 
   @doc false
-  def handle_call(:connection, _from, connection) do
-    {:reply, connection, connection}
+  def handle_call(:connection, _from, conn) do
+    {:reply, conn, conn}
   end
 end
