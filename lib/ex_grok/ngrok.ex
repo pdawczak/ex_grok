@@ -59,8 +59,10 @@ defmodule ExGrok.Ngrok do
     {:noreply, state}
   end
 
-  # If the connection has been established - replies with connection information.
-  # If the connection has NOT been established - will schedule retry in 100 milliseconds.
+  # If the connection:
+  #
+  #     * has been established - replies with connection information.
+  #     * has NOT been established - will schedule retry in 100 milliseconds.
   @doc false
   def handle_info({:connected, from} = msg, %{conn: conn} = state) do
     if Connection.established?(conn) do

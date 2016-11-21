@@ -38,8 +38,8 @@ defmodule ExGrok.NgrokLogParser do
   #
   #   * by encountering `"="` which indicates key-value relation, in which case
   #     it will delegate further parsing to `do_start_parse_value`
-  #   * due to lack of more data to process, in which case it returns accumulated
-  #     `parsed` map.
+  #   * due to lack of more data to process, in which case it returns
+  #     accumulated `parsed` map.
   @spec do_parse_key(charlist, charlist, parsed) :: result
   defp do_parse_key(data_to_parse, key_acc, parsed)
 
@@ -55,9 +55,9 @@ defmodule ExGrok.NgrokLogParser do
 
   # It performs further parsing of the data.
   #
-  # It is meant to take parsing over from `do_parse_key` key. It's main purpose is
-  # to detect if the data to be parsed is an embedded string (delimited by `"`),
-  # or just single word like string.
+  # It is meant to take parsing over from `do_parse_key` key. It's main purpose
+  # is to detect if the data to be parsed is an embedded string (delimited by
+  # `"`), or just single word like string.
   @spec do_start_parse_value(charlist, charlist, parsed) :: result
   defp do_start_parse_value(data_to_parse, key_acc, parsed)
 
@@ -70,8 +70,8 @@ defmodule ExGrok.NgrokLogParser do
 
   # It performs parsing of embedded string.
   #
-  # Embedded strings are delimited by `"` which allows them to store white space,
-  # thus it is important not to treat them as value delimiters.
+  # Embedded strings are delimited by `"` which allows them to store white
+  # space, thus it is important not to treat them as value delimiters.
   @spec do_parse_embedded_string(charlist, charlist, charlist, parsed) :: result
   defp do_parse_embedded_string(data_to_parse, key_acc, val_acc, parsed)
 
