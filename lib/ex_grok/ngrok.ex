@@ -46,7 +46,7 @@ defmodule ExGrok.Ngrok do
   def init(_) do
     port = open_port(command_opts())
 
-    send(self(), :port_health_check)
+    :timer.send_interval(3_000, :port_health_check)
 
     {:ok, new(port)}
   end
@@ -115,7 +115,6 @@ defmodule ExGrok.Ngrok do
         {:stop, "ngrok port doesn't respond", state}
 
       _ ->
-        Process.send_after(self(), :port_health_check, 3_000)
         {:noreply, state}
     end
   end
