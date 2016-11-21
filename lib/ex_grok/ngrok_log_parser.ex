@@ -77,10 +77,10 @@ defmodule ExGrok.NgrokLogParser do
 
   defp do_parse_embedded_string([], _k, _v, _parsed), do: :error
   defp do_parse_embedded_string([?", ?\s | rest], k, v, parsed) do
-    do_stop_parse_string_or_value(rest, k, v, parsed)
+    do_stop_parse_value(rest, k, v, parsed)
   end
   defp do_parse_embedded_string([?" | rest], k, v, parsed) do
-    do_stop_parse_string_or_value(rest, k, v, parsed)
+    do_stop_parse_value(rest, k, v, parsed)
   end
   defp do_parse_embedded_string([c | rest], k, v, parsed) do
     do_parse_embedded_string(rest, k, [c | v], parsed)
@@ -93,18 +93,18 @@ defmodule ExGrok.NgrokLogParser do
   defp do_parse_string(data_to_parse, key_acc, val_acc, parsed)
 
   defp do_parse_string([], k, v, parsed) do
-    do_stop_parse_string_or_value([], k, v, parsed)
+    do_stop_parse_value([], k, v, parsed)
   end
   defp do_parse_string([?\s | rest], k, v, parsed) do
-    do_stop_parse_string_or_value(rest, k, v, parsed)
+    do_stop_parse_value(rest, k, v, parsed)
   end
   defp do_parse_string([c | rest], k, v, parsed) do
     do_parse_string(rest, k, [c | v], parsed)
   end
 
   # It is helper function that is used for repetitive task when parsing strings.
-  @spec do_stop_parse_string_or_value(charlist, charlist, charlist, parsed) :: result
-  defp do_stop_parse_string_or_value(rest, k, v, parsed) do
+  @spec do_stop_parse_value(charlist, charlist, charlist, parsed) :: result
+  defp do_stop_parse_value(rest, k, v, parsed) do
     new_parsed = put_in_parsed(parsed, k, v)
 
     do_parse_key(rest, [], new_parsed)
