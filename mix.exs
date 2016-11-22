@@ -39,7 +39,7 @@ defmodule ExGrok.Mixfile do
     [files: ["lib", "mix.exs", "README.md"],
      maintainers: ["Paweł Dawczak"],
      licenses: ["MIT"],
-     links: [github: "https://github.com/pdawczak/ex_grok"]]
+     links: %{"Github" => "https://github.com/pdawczak/ex_grok"}]
   end
 
   defp aliases do
