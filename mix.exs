@@ -14,7 +14,7 @@ defmodule ExGrok.Mixfile do
      name: "ExGrok",
      source_url: "https://github.com/pdawczak/ex_grok",
      homepage_url: "https://github.com/pdawczak/ex_grok",
-     docs: [main: "README",
+     docs: [main: "readme",
             extras: ["README.md"]]]
   end
 
