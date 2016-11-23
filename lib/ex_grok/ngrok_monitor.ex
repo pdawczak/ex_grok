@@ -39,7 +39,6 @@ defmodule ExGrok.NgrokMonitor do
     {:DOWN, _ref, :process, pid, _reason},
     {pid, os_pid} = state
   ) do
-    _ =
     kill(os_pid)
 
     {:stop, :normal, state}
@@ -54,7 +53,7 @@ defmodule ExGrok.NgrokMonitor do
   # Private functions
 
   @spec kill(integer) :: no_return
-  def kill(os_pid) do
+  defp kill(os_pid) do
     "kill -9 #{os_pid}"
     |> String.to_char_list()
     |> :os.cmd()
