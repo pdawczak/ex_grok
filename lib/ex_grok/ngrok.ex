@@ -9,7 +9,7 @@ defmodule ExGrok.Ngrok do
 
   require Logger
 
-  alias ExGrok.{Connection, Ngrok, NgrokLogParser}
+  alias ExGrok.{Connection, Ngrok, NgrokLogParser, NgrokMonitor}
 
   defstruct port: nil, conn: %Connection{}
 
@@ -46,7 +46,9 @@ defmodule ExGrok.Ngrok do
   def init(_) do
     port = open_port(command_opts())
 
-    :timer.send_interval(3_000, :port_health_check)
+    {:ok, _ref} = :timer.send_interval(3_000, :port_health_check)
+
+    {:ok, _pid} = NgrokMonitor.start(self(), port)
 
     {:ok, new(port)}
   end
