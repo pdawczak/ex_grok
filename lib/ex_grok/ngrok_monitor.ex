@@ -14,6 +14,7 @@ defmodule ExGrok.NgrokMonitor do
   @doc """
   Starts monitoring process for ngrok manager.
   """
+  @spec start(pid, port) :: GenServer.on_start
   def start(pid, port) do
     GenServer.start(__MODULE__, {pid, port})
   end
